@@ -1,11 +1,13 @@
 var http = require('http');
+var agent = new http.Agent({ keepAlive: true });
+agent.maxSockets = 1;
 
 
 var options = {
   host: 'localhost',
   port: '8080',
   path: '/',
-  headers: {"Connection": "keep-alive"}
+  agent: agent,
 };
 
 callback = function(response) {
@@ -18,8 +20,9 @@ callback = function(response) {
 
   //respuesta recibida
   response.on('end', function () {
+    console.log(response.headers);
     console.log(str);
   });
 }
-//enviar request
+//"enviar" requests
 http.request(options, callback).end();
